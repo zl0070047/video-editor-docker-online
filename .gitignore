@@ -3,6 +3,23 @@ __pycache__/
 *.py[cod]
 *$py.class
 .Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
 .env
 .venv
 env/
@@ -16,9 +33,16 @@ venv.bak/
 .vscode/
 *.swp
 *.swo
+*.sublime-workspace
+*.sublime-project
 
 # OS
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
 # Project specific
@@ -26,6 +50,10 @@ Thumbs.db
 *.mov
 *.avi
 *.gif
+*.mkv
 resources/
 deploy/
-docker-compose.yml 
+docker-compose.yml
+tmp/
+logs/
+*.log 
