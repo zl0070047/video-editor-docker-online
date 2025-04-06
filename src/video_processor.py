@@ -64,7 +64,15 @@ class VideoProcessor:
             return False
         try:
             clip = self.video.subclip(start_time, end_time)
-            clip.write_videofile(output_path)
+            
+            # 检查输出格式是否为GIF
+            if output_path.lower().endswith('.gif'):
+                # GIF特殊处理
+                clip.write_gif(output_path, fps=15)
+            else:
+                # 其他视频格式
+                clip.write_videofile(output_path, codec='libx264')
+            
             clip.close()
             return True
         except Exception as e:
