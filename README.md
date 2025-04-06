@@ -26,7 +26,7 @@
 - 可以通过播放器直观地选择剪辑点
 
 ### 3. 控制面板
-![控制面板](docs/images/controls.png)
+![controls](https://github.com/user-attachments/assets/525c0e74-d20a-411c-a597-9107de0babae)
 #### 时间控制
 - 开始时间：设置视频剪辑的起始点
 - 结束时间：设置视频剪辑的结束点
@@ -46,7 +46,7 @@
   - 15 FPS：适合 GIF 动画
 
 ### 4. 处理进度
-![处理进度](docs/images/progress.png)
+![progress](https://github.com/user-attachments/assets/89149011-fdbb-4b12-91d5-e036e7ef4638)
 - 显示处理状态和进度
 - 处理完成后自动下载
 - 错误提示和状态反馈
