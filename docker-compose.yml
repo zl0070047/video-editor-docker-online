@@ -3,12 +3,25 @@ version: '3.8'
 services:
   web:
     build: .
+    restart: always
     ports:
-      - "5000:5000"
+      - "127.0.0.1:5000:5000"
     environment:
       - FLASK_APP=app.py
       - FLASK_ENV=production
-      - SECRET_KEY=your-secret-key-here
+      - SECRET_KEY=${SECRET_KEY}
     volumes:
-      - /tmp/video-editor:/tmp/video-editor-uploads
-    restart: unless-stopped 
+      - /app/video-editor/data:/tmp/video-editor-uploads
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 1G 

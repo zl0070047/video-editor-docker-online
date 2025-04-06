@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: video-editor
+    env: docker
+    region: singapore  # 选择新加坡区域，对中国用户访问更快
+    plan: starter  # 选择 starter 计划，可以根据需要调整
+    healthCheckPath: /
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true  # Render 会自动生成一个安全的密钥
+      - key: FLASK_ENV
+        value: production
+    disk:
+      name: video-editor-data
+      mountPath: /tmp/video-editor-uploads
+      sizeGB: 10  # 分配 10GB 存储空间 

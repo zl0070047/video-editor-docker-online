@@ -25,4 +25,7 @@ Thumbs.db
 *.mp4
 *.mov
 *.avi
-*.gif 
+*.gif
+resources/
+deploy/
+docker-compose.yml 

@@ -1,5 +1,5 @@
-from flask import Flask, render_template, request, jsonify, send_file
-from werkzeug.utils import secure_filename
+from flask import Flask, render_template, request, jsonify, send_file # type: ignore
+from werkzeug.utils import secure_filename # type: ignore
 import os
 from src.video_processor import VideoProcessor
 import tempfile
@@ -21,6 +21,16 @@ def allowed_file(filename):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/health')
+def health_check():
+    """健康检查端点"""
+    return jsonify({
+        'status': 'healthy',
+        'upload_dir': str(app.config['UPLOAD_FOLDER']),
+        'upload_dir_exists': app.config['UPLOAD_FOLDER'].exists(),
+        'upload_dir_writable': os.access(app.config['UPLOAD_FOLDER'], os.W_OK)
+    })
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -71,4 +81,5 @@ def process_video():
     )
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000) 
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port) 
