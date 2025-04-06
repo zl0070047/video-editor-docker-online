@@ -258,49 +258,195 @@
             const format = document.getElementById('outputFormat').value;
 
             // 显示进度条
-            document.querySelector('.progress').style.display = 'block';
+            const progressBar = document.querySelector('.progress-bar');
+            const progress = document.querySelector('.progress');
+            progress.style.display = 'block';
+            progressBar.style.width = '0%';
+            progressBar.textContent = '准备上传...';
             document.getElementById('processBtn').disabled = true;
 
-            fetch('/process', {
+            // 创建 FormData
+            const formData = new FormData();
+            formData.append('video', currentFile);
+
+            // 上传视频文件
+            fetch('/upload', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    filename: currentFile,
-                    start_time: startTime,
-                    end_time: endTime,
-                    format: format
-                })
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('上传失败');
+                }
+                progressBar.style.width = '50%';
+                progressBar.textContent = '上传完成，正在处理...';
+                
+                // 处理视频
+                return fetch('/process', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        start_time: startTime,
+                        end_time: endTime,
+                        output_format: format
+                    })
+                });
             })
             .then(response => {
                 if (!response.ok) {
                     throw new Error('处理失败');
                 }
+                progressBar.style.width = '75%';
+                progressBar.textContent = '处理完成，准备下载...';
                 return response.blob();
             })
             .then(blob => {
-                // 触发下载
+                progressBar.style.width = '100%';
+                progressBar.textContent = '完成！';
+                
+                // 创建下载链接
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `processed_video.${format}`;
+                a.download = `output.${format}`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
                 window.URL.revokeObjectURL(url);
 
                 // 重置界面
-                document.querySelector('.progress').style.display = 'none';
-                document.getElementById('processBtn').disabled = false;
+                setTimeout(() => {
+                    progress.style.display = 'none';
+                    document.getElementById('processBtn').disabled = false;
+                    progressBar.style.width = '0%';
+                    progressBar.textContent = '';
+                }, 2000);
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('处理失败');
-                document.querySelector('.progress').style.display = 'none';
-                document.getElementById('processBtn').disabled = false;
+                progressBar.style.width = '100%';
+                progressBar.classList.remove('bg-primary');
+                progressBar.classList.add('bg-danger');
+                progressBar.textContent = '处理失败: ' + error.message;
+                
+                setTimeout(() => {
+                    progress.style.display = 'none';
+                    document.getElementById('processBtn').disabled = false;
+                    progressBar.style.width = '0%';
+                    progressBar.textContent = '';
+                    progressBar.classList.remove('bg-danger');
+                    progressBar.classList.add('bg-primary');
+                }, 3000);
             });
         }
+
+        // 添加上传进度监听
+        function uploadFile(file) {
+            const formData = new FormData();
+            formData.append('video', file);
+
+            const xhr = new XMLHttpRequest();
+            const progressBar = document.querySelector('.progress-bar');
+            const progress = document.querySelector('.progress');
+            
+            xhr.upload.addEventListener('progress', (e) => {
+                if (e.lengthComputable) {
+                    const percentComplete = (e.loaded / e.total) * 100;
+                    progress.style.display = 'block';
+                    progressBar.style.width = percentComplete + '%';
+                    progressBar.textContent = '上传中: ' + Math.round(percentComplete) + '%';
+                }
+            });
+
+            xhr.addEventListener('load', () => {
+                if (xhr.status === 200) {
+                    progressBar.style.width = '100%';
+                    progressBar.textContent = '上传完成！';
+                    setTimeout(() => {
+                        progress.style.display = 'none';
+                        progressBar.style.width = '0%';
+                        progressBar.textContent = '';
+                    }, 1000);
+                    
+                    // 显示视频预览
+                    const videoUrl = URL.createObjectURL(file);
+                    video.src = videoUrl;
+                    video.style.display = 'block';
+                    document.getElementById('uploadZone').style.display = 'none';
+                    document.getElementById('processBtn').disabled = false;
+                    currentFile = file;
+                } else {
+                    progressBar.classList.remove('bg-primary');
+                    progressBar.classList.add('bg-danger');
+                    progressBar.textContent = '上传失败';
+                    setTimeout(() => {
+                        progress.style.display = 'none';
+                        progressBar.style.width = '0%';
+                        progressBar.textContent = '';
+                        progressBar.classList.remove('bg-danger');
+                        progressBar.classList.add('bg-primary');
+                    }, 2000);
+                }
+            });
+
+            xhr.addEventListener('error', () => {
+                progressBar.classList.remove('bg-primary');
+                progressBar.classList.add('bg-danger');
+                progressBar.textContent = '上传失败';
+                setTimeout(() => {
+                    progress.style.display = 'none';
+                    progressBar.style.width = '0%';
+                    progressBar.textContent = '';
+                    progressBar.classList.remove('bg-danger');
+                    progressBar.classList.add('bg-primary');
+                }, 2000);
+            });
+
+            xhr.open('POST', '/upload');
+            xhr.send(formData);
+        }
+
+        // 更新文件处理函数
+        function handleFile(file) {
+            if (file.type.startsWith('video/')) {
+                uploadFile(file);
+            } else {
+                alert('请选择视频文件');
+            }
+        }
+
+        // 更新拖放处理
+        const dropZone = document.getElementById('uploadZone');
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = '#0d6efd';
+            dropZone.style.backgroundColor = '#e9ecef';
+        });
+
+        dropZone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = '#ccc';
+            dropZone.style.backgroundColor = '#f8f9fa';
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = '#ccc';
+            dropZone.style.backgroundColor = '#f8f9fa';
+            const file = e.dataTransfer.files[0];
+            handleFile(file);
+        });
+
+        // 更新文件输入处理
+        const fileInput = document.getElementById('videoInput');
+        dropZone.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
     </script>
 </body>
 </html> 
