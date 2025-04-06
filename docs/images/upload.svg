@@ -8,6 +8,6 @@
     <path d="M300 50 L300 90 M285 65 L300 50 L315 65" stroke="#6c757d" stroke-width="3" fill="none"/>
     
     <!-- 文字 -->
-    <text x="300" y="120" text-anchor="middle" font-family="Arial" font-size="16">点击或拖拽视频文件到此处</text>
-    <text x="300" y="150" text-anchor="middle" font-family="Arial" font-size="12" fill="#6c757d">支持的格式: MP4, AVI, MOV</text>
+    <text x="300" y="120" text-anchor="middle" font-family="PingFang SC, Microsoft YaHei, SimHei, sans-serif" font-size="16" fill="#212529">点击或拖拽视频文件到此处</text>
+    <text x="300" y="150" text-anchor="middle" font-family="PingFang SC, Microsoft YaHei, SimHei, sans-serif" font-size="12" fill="#6c757d">支持的格式: MP4, AVI, MOV</text>
 </svg> 

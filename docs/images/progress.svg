@@ -7,8 +7,8 @@
     <rect x="10" y="40" width="435" height="20" fill="#0d6efd" rx="10"/>
     
     <!-- 进度文字 -->
-    <text x="300" y="55" font-family="Arial" font-size="12" fill="white" text-anchor="middle">处理中: 75%</text>
+    <text x="300" y="55" font-family="PingFang SC, Microsoft YaHei, SimHei, sans-serif" font-size="12" fill="white" text-anchor="middle">处理中: 75%</text>
     
     <!-- 状态文字 -->
-    <text x="300" y="85" font-family="Arial" font-size="14" fill="#6c757d" text-anchor="middle">处理完成后将自动下载</text>
+    <text x="300" y="85" font-family="PingFang SC, Microsoft YaHei, SimHei, sans-serif" font-size="14" fill="#6c757d" text-anchor="middle">处理完成后将自动下载</text>
 </svg> 

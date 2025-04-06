@@ -4,32 +4,32 @@
     <rect x="10" y="10" width="780" height="180" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="8"/>
     
     <!-- 时间控制 -->
-    <text x="30" y="40" font-family="Arial" font-size="14" fill="#212529">开始时间:</text>
+    <text x="30" y="40" font-family="PingFang SC, Microsoft YaHei, SimHei, sans-serif" font-size="14" fill="#212529">开始时间:</text>
     <rect x="110" y="25" width="80" height="24" fill="white" stroke="#ced4da" rx="4"/>
-    <text x="150" y="42" font-family="Arial" font-size="14" text-anchor="middle">0.0</text>
+    <text x="150" y="42" font-family="PingFang SC, Microsoft YaHei, SimHei, sans-serif" font-size="14" text-anchor="middle">0.0</text>
     <rect x="200" y="25" width="100" height="24" fill="#f8f9fa" stroke="#0d6efd" rx="4"/>
-    <text x="250" y="42" font-family="Arial" font-size="14" fill="#0d6efd" text-anchor="middle">设为当前</text>
+    <text x="250" y="42" font-family="PingFang SC, Microsoft YaHei, SimHei, sans-serif" font-size="14" fill="#0d6efd" text-anchor="middle">设为当前</text>
     
-    <text x="330" y="40" font-family="Arial" font-size="14" fill="#212529">结束时间:</text>
+    <text x="330" y="40" font-family="PingFang SC, Microsoft YaHei, SimHei, sans-serif" font-size="14" fill="#212529">结束时间:</text>
     <rect x="410" y="25" width="80" height="24" fill="white" stroke="#ced4da" rx="4"/>
-    <text x="450" y="42" font-family="Arial" font-size="14" text-anchor="middle">10.0</text>
+    <text x="450" y="42" font-family="PingFang SC, Microsoft YaHei, SimHei, sans-serif" font-size="14" text-anchor="middle">10.0</text>
     <rect x="500" y="25" width="100" height="24" fill="#f8f9fa" stroke="#0d6efd" rx="4"/>
-    <text x="550" y="42" font-family="Arial" font-size="14" fill="#0d6efd" text-anchor="middle">设为当前</text>
+    <text x="550" y="42" font-family="PingFang SC, Microsoft YaHei, SimHei, sans-serif" font-size="14" fill="#0d6efd" text-anchor="middle">设为当前</text>
     
     <!-- 输出设置 -->
-    <text x="30" y="90" font-family="Arial" font-size="14" fill="#212529">输出格式:</text>
+    <text x="30" y="90" font-family="PingFang SC, Microsoft YaHei, SimHei, sans-serif" font-size="14" fill="#212529">输出格式:</text>
     <rect x="110" y="75" width="100" height="24" fill="white" stroke="#ced4da" rx="4"/>
-    <text x="160" y="92" font-family="Arial" font-size="14" text-anchor="middle">MP4 ▼</text>
+    <text x="160" y="92" font-family="PingFang SC, Microsoft YaHei, SimHei, sans-serif" font-size="14" text-anchor="middle">MP4 ▼</text>
     
-    <text x="240" y="90" font-family="Arial" font-size="14" fill="#212529">帧率:</text>
+    <text x="240" y="90" font-family="PingFang SC, Microsoft YaHei, SimHei, sans-serif" font-size="14" fill="#212529">帧率:</text>
     <rect x="290" y="75" width="120" height="24" fill="white" stroke="#ced4da" rx="4"/>
-    <text x="350" y="92" font-family="Arial" font-size="14" text-anchor="middle">原始帧率 ▼</text>
+    <text x="350" y="92" font-family="PingFang SC, Microsoft YaHei, SimHei, sans-serif" font-size="14" text-anchor="middle">原始帧率 ▼</text>
     
     <rect x="440" y="75" width="100" height="24" fill="#0d6efd" stroke="none" rx="4"/>
-    <text x="490" y="92" font-family="Arial" font-size="14" fill="white" text-anchor="middle">处理视频</text>
+    <text x="490" y="92" font-family="PingFang SC, Microsoft YaHei, SimHei, sans-serif" font-size="14" fill="white" text-anchor="middle">处理视频</text>
     
     <!-- 进度条 -->
     <rect x="30" y="130" width="740" height="20" fill="#e9ecef" rx="10"/>
     <rect x="30" y="130" width="370" height="20" fill="#0d6efd" rx="10"/>
-    <text x="400" y="144" font-family="Arial" font-size="12" fill="white" text-anchor="middle">处理中: 50%</text>
+    <text x="400" y="144" font-family="PingFang SC, Microsoft YaHei, SimHei, sans-serif" font-size="12" fill="white" text-anchor="middle">处理中: 50%</text>
 </svg> 
