@@ -1,63 +1,78 @@
-# Video Editor
+# 在线视频编辑器
 
-A simple video editing tool with Mac skeuomorphic UI design, built using Python and PyQt6.
+一个简单的在线视频编辑器，支持视频剪辑和格式转换。
 
-## Features
+## 功能特点
 
-- Video import with size limit (<100MB)
-- Video preview and timeline
-- Video trimming and export
-- GIF creation
-- Customizable export settings:
-  - Video format (MP4, MOV, AVI)
-  - Resolution (Original, 720p, 480p)
-  - Frame rate (Original, 30, 24, 15)
-  - GIF-specific options
+- 支持上传视频文件（MP4、AVI、MOV、MKV）
+- 在线预览视频
+- 设置视频剪辑起止时间
+- 支持多种输出格式（MP4、AVI、MOV、GIF）
+- 在线处理和下载
 
-## Requirements
+## 部署说明
 
-- Python 3.8 or higher
-- FFmpeg
-- PyQt6
-- MoviePy
-- Pillow
-- NumPy
+### 使用 Docker Compose 部署（推荐）
 
-## Installation
-
-1. Clone this repository:
+1. 克隆仓库：
 ```bash
-git clone https://github.com/yourusername/video-editor.git
-cd video-editor
+git clone https://github.com/zl0070047/video-editor-docker.git
+cd video-editor-docker
 ```
 
-2. Create a virtual environment and activate it:
+2. 修改配置：
+- 在 `docker-compose.yml` 中修改 `SECRET_KEY` 环境变量
+- 根据需要修改端口映射（默认 5000）
+
+3. 启动服务：
 ```bash
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+docker-compose up -d
 ```
 
-3. Install the required packages:
+服务将在 http://localhost:5000 运行
+
+### 手动部署
+
+1. 安装系统依赖：
+```bash
+# Ubuntu/Debian
+sudo apt-get update
+sudo apt-get install -y python3 python3-pip ffmpeg
+
+# CentOS/RHEL
+sudo yum install -y python3 python3-pip ffmpeg
+```
+
+2. 安装 Python 依赖：
 ```bash
 pip install -r requirements.txt
 ```
 
-4. Install FFmpeg:
-- On macOS: `brew install ffmpeg`
-- On Windows: Download from [FFmpeg website](https://ffmpeg.org/download.html)
-- On Linux: `sudo apt-get install ffmpeg`
-
-## Usage
-
-1. Run the application:
+3. 启动服务：
 ```bash
-python src/main.py
+gunicorn --bind 0.0.0.0:5000 app:app
 ```
 
-2. Import a video file using the "Import Video" button
-3. Use the timeline to select the portion of the video you want to export
-4. Configure export settings in the sidebar
-5. Click "Export" to save the edited video or create a GIF
+## 使用说明
+
+1. 打开浏览器访问 http://localhost:5000
+2. 点击"选择文件"上传视频
+3. 设置剪辑起止时间
+4. 选择输出格式
+5. 点击"处理视频"
+6. 等待处理完成后自动下载
+
+## 注意事项
+
+- 上传文件大小限制为 16MB
+- 临时文件存储在 /tmp/video-editor-uploads 目录
+- 建议定期清理临时文件
+
+## 技术栈
+
+- 后端：Flask + MoviePy
+- 前端：Bootstrap + 原生 JavaScript
+- 容器化：Docker + Docker Compose
 
 ## License
 

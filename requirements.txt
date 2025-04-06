@@ -1,4 +1,9 @@
 PyQt6>=6.6.1
 moviepy>=1.0.3
 pillow>=10.2.0
-numpy>=1.26.4 
+numpy>=1.26.4
+flask==3.0.2
+Werkzeug==3.0.1
+python-dotenv==1.0.1
+flask-login==0.6.3
+gunicorn==21.2.0 
