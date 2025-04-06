@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="600" height="200" xmlns="http://www.w3.org/2000/svg">
+    <!-- 背景 -->
+    <rect x="10" y="10" width="580" height="180" fill="#f8f9fa" stroke="#ccc" stroke-width="2" stroke-dasharray="5,5"/>
+    
+    <!-- 上传图标 -->
+    <circle cx="300" cy="70" r="25" fill="#e9ecef"/>
+    <path d="M300 50 L300 90 M285 65 L300 50 L315 65" stroke="#6c757d" stroke-width="3" fill="none"/>
+    
+    <!-- 文字 -->
+    <text x="300" y="120" text-anchor="middle" font-family="Arial" font-size="16">点击或拖拽视频文件到此处</text>
+    <text x="300" y="150" text-anchor="middle" font-family="Arial" font-size="12" fill="#6c757d">支持的格式: MP4, AVI, MOV</text>
+</svg> 

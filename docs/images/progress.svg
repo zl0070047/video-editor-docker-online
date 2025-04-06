@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="600" height="100" xmlns="http://www.w3.org/2000/svg">
+    <!-- 进度条背景 -->
+    <rect x="10" y="40" width="580" height="20" fill="#e9ecef" rx="10"/>
+    
+    <!-- 进度条 -->
+    <rect x="10" y="40" width="435" height="20" fill="#0d6efd" rx="10"/>
+    
+    <!-- 进度文字 -->
+    <text x="300" y="55" font-family="Arial" font-size="12" fill="white" text-anchor="middle">处理中: 75%</text>
+    
+    <!-- 状态文字 -->
+    <text x="300" y="85" font-family="Arial" font-size="14" fill="#6c757d" text-anchor="middle">处理完成后将自动下载</text>
+</svg> 

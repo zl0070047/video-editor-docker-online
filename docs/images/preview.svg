@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="800" height="400" xmlns="http://www.w3.org/2000/svg">
+    <!-- 视频预览区域 -->
+    <rect x="10" y="10" width="780" height="380" fill="#000000" rx="8"/>
+    
+    <!-- 播放控制栏背景 -->
+    <rect x="10" y="340" width="780" height="50" fill="rgba(0,0,0,0.7)" rx="0"/>
+    
+    <!-- 播放按钮 -->
+    <circle cx="40" cy="365" r="15" fill="#ffffff"/>
+    <path d="M35 357 L35 373 L50 365 Z" fill="#000000"/>
+    
+    <!-- 进度条 -->
+    <rect x="70" y="362" width="600" height="6" fill="#4a4a4a" rx="3"/>
+    <rect x="70" y="362" width="240" height="6" fill="#ffffff" rx="3"/>
+    
+    <!-- 时间显示 -->
+    <text x="690" y="368" font-family="Arial" font-size="12" fill="#ffffff">2:30 / 6:15</text>
+    
+    <!-- 播放头 -->
+    <circle cx="310" cy="365" r="6" fill="#ffffff"/>
+</svg> 
