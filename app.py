@@ -67,7 +67,8 @@ def upload_file():
             
             # 初始化视频处理器
             processor = VideoProcessor()
-            processor.load_video(str(filepath))
+            if not processor.open_video(str(filepath)):
+                return jsonify({'error': 'Failed to open video'}), 400
             
             return jsonify({
                 'filename': filename,
@@ -96,8 +97,11 @@ def process_video():
         logging.info(f"Processing video: {input_path} -> {output_path}")
         
         processor = VideoProcessor()
-        processor.load_video(str(input_path))
-        processor.export_video(str(output_path), start_time, end_time)
+        if not processor.open_video(str(input_path)):
+            return jsonify({'error': 'Failed to open video'}), 400
+            
+        if not processor.export_video(str(output_path), start_time, end_time):
+            return jsonify({'error': 'Failed to process video'}), 500
         
         return send_file(
             str(output_path),
