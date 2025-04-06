@@ -58,20 +58,31 @@ class VideoProcessor:
             print(f"Error resizing frame: {str(e)}")
             return frame
     
-    def export_video(self, output_path, start_time, end_time):
-        """导出视频片段"""
+    def export_video(self, output_path, start_time, end_time, fps=None):
+        """导出视频片段
+        Args:
+            output_path: 输出文件路径
+            start_time: 开始时间（秒）
+            end_time: 结束时间（秒）
+            fps: 输出帧率，None表示使用原始帧率
+        """
         if not self.video:
             return False
         try:
             clip = self.video.subclip(start_time, end_time)
             
+            # 如果指定了帧率，设置输出帧率
+            if fps is not None:
+                clip = clip.set_fps(fps)
+            
             # 检查输出格式是否为GIF
             if output_path.lower().endswith('.gif'):
-                # GIF特殊处理
-                clip.write_gif(output_path, fps=15)
+                # GIF特殊处理，使用指定帧率或默认15fps
+                gif_fps = fps if fps is not None else 15
+                clip.write_gif(output_path, fps=gif_fps)
             else:
                 # 其他视频格式
-                clip.write_videofile(output_path, codec='libx264')
+                clip.write_videofile(output_path, codec='libx264', fps=fps if fps is not None else self.fps)
             
             clip.close()
             return True

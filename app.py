@@ -89,18 +89,19 @@ def process_video():
         start_time = float(data.get('start_time', 0))
         end_time = float(data.get('end_time'))
         output_format = data.get('output_format', 'mp4')
+        fps = data.get('fps')  # 可以是 None（使用原始帧率）或整数
         
         input_path = app.config['UPLOAD_FOLDER'] / secure_filename(filename)
         output_filename = f"output_{Path(filename).stem}.{output_format}"
         output_path = app.config['UPLOAD_FOLDER'] / output_filename
         
-        logging.info(f"Processing video: {input_path} -> {output_path}")
+        logging.info(f"Processing video: {input_path} -> {output_path} (fps: {fps})")
         
         processor = VideoProcessor()
         if not processor.open_video(str(input_path)):
             return jsonify({'error': 'Failed to open video'}), 400
             
-        if not processor.export_video(str(output_path), start_time, end_time):
+        if not processor.export_video(str(output_path), start_time, end_time, fps):
             return jsonify({'error': 'Failed to process video'}), 500
         
         return send_file(

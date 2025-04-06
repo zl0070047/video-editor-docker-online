@@ -130,6 +130,18 @@
                         </select>
                     </div>
                     <div class="col-auto">
+                        <label class="col-form-label">帧率:</label>
+                    </div>
+                    <div class="col-auto">
+                        <select id="fps" class="form-select form-select-sm">
+                            <option value="original">原始帧率</option>
+                            <option value="60">60 FPS</option>
+                            <option value="30">30 FPS</option>
+                            <option value="24">24 FPS</option>
+                            <option value="15">15 FPS</option>
+                        </select>
+                    </div>
+                    <div class="col-auto">
                         <button id="processBtn" class="btn btn-primary" onclick="processVideo()" disabled>处理视频</button>
                     </div>
                 </div>
@@ -250,6 +262,7 @@
             const startTime = parseFloat(document.getElementById('startTime').value);
             const endTime = parseFloat(document.getElementById('endTime').value);
             const format = document.getElementById('outputFormat').value;
+            const fps = document.getElementById('fps').value;
 
             // 显示进度条
             const progressBar = document.querySelector('.progress-bar');
@@ -269,7 +282,8 @@
                     filename: currentFile,
                     start_time: startTime,
                     end_time: endTime,
-                    output_format: format
+                    output_format: format,
+                    fps: fps === 'original' ? null : parseInt(fps)
                 })
             })
             .then(response => {
