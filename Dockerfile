@@ -24,8 +24,8 @@ ENV FLASK_APP=app.py
 ENV FLASK_ENV=production
 ENV PORT=10000
 
-# 暴露端口（Render 会自动设置实际端口）
-EXPOSE 10000
+# 暴露端口
+EXPOSE ${PORT}
 
 # 启动命令
-CMD gunicorn --bind 0.0.0.0:$PORT app:app 
+CMD gunicorn --bind 0.0.0.0:${PORT} --workers 2 --threads 4 --timeout 120 app:app 
