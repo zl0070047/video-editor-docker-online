@@ -88,7 +88,7 @@ def process_video():
         filename = data.get('filename')
         start_time = float(data.get('start_time', 0))
         end_time = float(data.get('end_time'))
-        output_format = data.get('format', 'mp4')
+        output_format = data.get('output_format', 'mp4')
         
         input_path = app.config['UPLOAD_FOLDER'] / secure_filename(filename)
         output_filename = f"output_{Path(filename).stem}.{output_format}"

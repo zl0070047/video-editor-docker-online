@@ -150,108 +150,102 @@
         let video = document.getElementById('videoPreview');
         let currentFile = null;
 
-        // 上传区域点击处理
-        document.querySelector('.upload-zone').addEventListener('click', () => {
-            document.getElementById('videoInput').click();
-        });
-
-        // 拖拽处理
-        document.querySelector('.upload-zone').addEventListener('dragover', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            e.currentTarget.style.borderColor = '#0d6efd';
-        });
-
-        document.querySelector('.upload-zone').addEventListener('dragleave', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            e.currentTarget.style.borderColor = '#ddd';
-        });
-
-        document.querySelector('.upload-zone').addEventListener('drop', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            e.currentTarget.style.borderColor = '#ddd';
-            
-            if (e.dataTransfer.files.length) {
-                handleFileSelect(e.dataTransfer.files[0]);
-            }
-        });
-
-        // 文件选择处理
-        document.getElementById('videoInput').addEventListener('change', (e) => {
-            if (e.target.files.length) {
-                handleFileSelect(e.target.files[0]);
-            }
-        });
-
+        // 文件处理函数
         function handleFileSelect(file) {
+            if (!file.type.startsWith('video/')) {
+                alert('请选择视频文件');
+                return;
+            }
+
             const formData = new FormData();
             formData.append('video', file);
 
             // 显示加载提示
-            document.querySelector('.upload-zone').innerHTML = '<div class="spinner-border" role="status"></div><p>上传中...</p>';
+            const progressBar = document.querySelector('.progress-bar');
+            const progress = document.querySelector('.progress');
+            progress.style.display = 'block';
+            progressBar.style.width = '0%';
+            progressBar.textContent = '上传中...';
 
-            fetch('/upload', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    alert(data.error);
-                    resetUploadZone();
-                    return;
+            // 使用 XMLHttpRequest 来监控上传进度
+            const xhr = new XMLHttpRequest();
+            
+            xhr.upload.addEventListener('progress', (e) => {
+                if (e.lengthComputable) {
+                    const percentComplete = (e.loaded / e.total) * 100;
+                    progressBar.style.width = percentComplete + '%';
+                    progressBar.textContent = '上传中: ' + Math.round(percentComplete) + '%';
                 }
-
-                currentFile = data.filename;
-                
-                // 显示预览
-                video.src = URL.createObjectURL(file);
-                
-                // 显示编辑区域
-                document.getElementById('uploadZone').classList.add('d-none');
-                document.getElementById('videoPreview').classList.remove('d-none');
-                
-                // 设置时间范围
-                document.getElementById('startTime').value = 0;
-                document.getElementById('endTime').value = data.duration;
-
-                // 更新视频事件监听
-                setupVideoEvents();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('上传失败');
-                resetUploadZone();
             });
-        }
 
-        function resetUploadZone() {
-            document.querySelector('.upload-zone').innerHTML = `
-                <i class="bi bi-cloud-upload"></i>
-                <p class="mb-0">点击或拖拽视频文件到此处</p>
-                <p class="text-muted small">支持的格式: MP4, AVI, MOV</p>
-            `;
-        }
+            xhr.addEventListener('load', () => {
+                if (xhr.status === 200) {
+                    const response = JSON.parse(xhr.responseText);
+                    if (response.error) {
+                        showError(response.error);
+                        return;
+                    }
 
-        function setupVideoEvents() {
-            video.addEventListener('timeupdate', () => {
-                document.getElementById('currentTime').textContent = 
-                    video.currentTime.toFixed(1);
+                    progressBar.style.width = '100%';
+                    progressBar.textContent = '上传完成！';
+                    
+                    // 保存文件名
+                    currentFile = response.filename;
+                    
+                    // 显示视频预览
+                    video.src = URL.createObjectURL(file);
+                    video.style.display = 'block';
+                    document.getElementById('uploadZone').style.display = 'none';
+                    
+                    // 设置时间范围
+                    document.getElementById('startTime').value = '0';
+                    document.getElementById('endTime').value = response.duration || '0';
+                    
+                    // 启用处理按钮
+                    document.getElementById('processBtn').disabled = false;
+
+                    setTimeout(() => {
+                        progress.style.display = 'none';
+                        progressBar.style.width = '0%';
+                        progressBar.textContent = '';
+                    }, 1000);
+                } else {
+                    showError('上传失败');
+                }
             });
+
+            xhr.addEventListener('error', () => {
+                showError('上传失败');
+            });
+
+            xhr.open('POST', '/upload');
+            xhr.send(formData);
         }
 
-        function setCurrentTimeAsStart() {
-            document.getElementById('startTime').value = video.currentTime.toFixed(1);
+        function showError(message) {
+            const progressBar = document.querySelector('.progress-bar');
+            const progress = document.querySelector('.progress');
+            
+            progressBar.style.width = '100%';
+            progressBar.classList.remove('bg-primary');
+            progressBar.classList.add('bg-danger');
+            progressBar.textContent = message;
+            
+            setTimeout(() => {
+                progress.style.display = 'none';
+                progressBar.style.width = '0%';
+                progressBar.textContent = '';
+                progressBar.classList.remove('bg-danger');
+                progressBar.classList.add('bg-primary');
+            }, 2000);
         }
 
-        function setCurrentTimeAsEnd() {
-            document.getElementById('endTime').value = video.currentTime.toFixed(1);
-        }
-
+        // 处理视频
         function processVideo() {
-            if (!currentFile) return;
+            if (!currentFile) {
+                alert('请先上传视频');
+                return;
+            }
 
             const startTime = parseFloat(document.getElementById('startTime').value);
             const endTime = parseFloat(document.getElementById('endTime').value);
@@ -261,38 +255,22 @@
             const progressBar = document.querySelector('.progress-bar');
             const progress = document.querySelector('.progress');
             progress.style.display = 'block';
-            progressBar.style.width = '0%';
-            progressBar.textContent = '准备上传...';
+            progressBar.style.width = '25%';
+            progressBar.textContent = '处理中...';
             document.getElementById('processBtn').disabled = true;
 
-            // 创建 FormData
-            const formData = new FormData();
-            formData.append('video', currentFile);
-
-            // 上传视频文件
-            fetch('/upload', {
+            // 发送处理请求
+            fetch('/process', {
                 method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('上传失败');
-                }
-                progressBar.style.width = '50%';
-                progressBar.textContent = '上传完成，正在处理...';
-                
-                // 处理视频
-                return fetch('/process', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        start_time: startTime,
-                        end_time: endTime,
-                        output_format: format
-                    })
-                });
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    filename: currentFile,
+                    start_time: startTime,
+                    end_time: endTime,
+                    output_format: format
+                })
             })
             .then(response => {
                 if (!response.ok) {
@@ -306,7 +284,7 @@
                 progressBar.style.width = '100%';
                 progressBar.textContent = '完成！';
                 
-                // 创建下载链接
+                // 触发下载
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
@@ -326,99 +304,23 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                progressBar.style.width = '100%';
-                progressBar.classList.remove('bg-primary');
-                progressBar.classList.add('bg-danger');
-                progressBar.textContent = '处理失败: ' + error.message;
-                
-                setTimeout(() => {
-                    progress.style.display = 'none';
-                    document.getElementById('processBtn').disabled = false;
-                    progressBar.style.width = '0%';
-                    progressBar.textContent = '';
-                    progressBar.classList.remove('bg-danger');
-                    progressBar.classList.add('bg-primary');
-                }, 3000);
+                showError(error.message || '处理失败');
+                document.getElementById('processBtn').disabled = false;
             });
         }
 
-        // 添加上传进度监听
-        function uploadFile(file) {
-            const formData = new FormData();
-            formData.append('video', file);
-
-            const xhr = new XMLHttpRequest();
-            const progressBar = document.querySelector('.progress-bar');
-            const progress = document.querySelector('.progress');
-            
-            xhr.upload.addEventListener('progress', (e) => {
-                if (e.lengthComputable) {
-                    const percentComplete = (e.loaded / e.total) * 100;
-                    progress.style.display = 'block';
-                    progressBar.style.width = percentComplete + '%';
-                    progressBar.textContent = '上传中: ' + Math.round(percentComplete) + '%';
-                }
-            });
-
-            xhr.addEventListener('load', () => {
-                if (xhr.status === 200) {
-                    progressBar.style.width = '100%';
-                    progressBar.textContent = '上传完成！';
-                    setTimeout(() => {
-                        progress.style.display = 'none';
-                        progressBar.style.width = '0%';
-                        progressBar.textContent = '';
-                    }, 1000);
-                    
-                    // 显示视频预览
-                    const videoUrl = URL.createObjectURL(file);
-                    video.src = videoUrl;
-                    video.style.display = 'block';
-                    document.getElementById('uploadZone').style.display = 'none';
-                    document.getElementById('processBtn').disabled = false;
-                    currentFile = file;
-                } else {
-                    progressBar.classList.remove('bg-primary');
-                    progressBar.classList.add('bg-danger');
-                    progressBar.textContent = '上传失败';
-                    setTimeout(() => {
-                        progress.style.display = 'none';
-                        progressBar.style.width = '0%';
-                        progressBar.textContent = '';
-                        progressBar.classList.remove('bg-danger');
-                        progressBar.classList.add('bg-primary');
-                    }, 2000);
-                }
-            });
-
-            xhr.addEventListener('error', () => {
-                progressBar.classList.remove('bg-primary');
-                progressBar.classList.add('bg-danger');
-                progressBar.textContent = '上传失败';
-                setTimeout(() => {
-                    progress.style.display = 'none';
-                    progressBar.style.width = '0%';
-                    progressBar.textContent = '';
-                    progressBar.classList.remove('bg-danger');
-                    progressBar.classList.add('bg-primary');
-                }, 2000);
-            });
-
-            xhr.open('POST', '/upload');
-            xhr.send(formData);
+        // 时间控制函数
+        function setCurrentTimeAsStart() {
+            document.getElementById('startTime').value = video.currentTime.toFixed(1);
         }
 
-        // 更新文件处理函数
-        function handleFile(file) {
-            if (file.type.startsWith('video/')) {
-                uploadFile(file);
-            } else {
-                alert('请选择视频文件');
-            }
+        function setCurrentTimeAsEnd() {
+            document.getElementById('endTime').value = video.currentTime.toFixed(1);
         }
 
-        // 更新拖放处理
+        // 拖放处理
         const dropZone = document.getElementById('uploadZone');
+
         dropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
             dropZone.style.borderColor = '#0d6efd';
@@ -435,16 +337,17 @@
             e.preventDefault();
             dropZone.style.borderColor = '#ccc';
             dropZone.style.backgroundColor = '#f8f9fa';
-            const file = e.dataTransfer.files[0];
-            handleFile(file);
+            if (e.dataTransfer.files.length > 0) {
+                handleFileSelect(e.dataTransfer.files[0]);
+            }
         });
 
-        // 更新文件输入处理
+        // 文件输入处理
         const fileInput = document.getElementById('videoInput');
         dropZone.addEventListener('click', () => fileInput.click());
         fileInput.addEventListener('change', (e) => {
             if (e.target.files.length > 0) {
-                handleFile(e.target.files[0]);
+                handleFileSelect(e.target.files[0]);
             }
         });
     </script>
