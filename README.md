@@ -14,7 +14,7 @@
 ## 操作界面
 
 ### 1. 上传区域
-![上传区域](docs/images/upload.png)
+![upload](https://github.com/user-attachments/assets/3286cb6e-2b86-4ba6-b61a-64f5856d2d72)
 - 支持拖拽上传或点击选择文件
 - 显示支持的文件格式
 - 实时显示上传进度
