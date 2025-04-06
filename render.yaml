@@ -6,15 +6,15 @@ services:
     plan: starter  # 选择 starter 计划，可以根据需要调整
     healthCheckPath: /health
     buildCommand: docker build -t video-editor .
-    startCommand: gunicorn --bind 0.0.0.0:$PORT app:app
+    startCommand: docker run -p $PORT:10000 -v /data:/tmp/video-editor-uploads video-editor
     envVars:
       - key: SECRET_KEY
         generateValue: true  # Render 会自动生成一个安全的密钥
       - key: FLASK_ENV
         value: production
-      - key: FLASK_APP
-        value: app.py
+      - key: PYTHONUNBUFFERED
+        value: "1"
     disk:
       name: video-editor-data
-      mountPath: /tmp/video-editor-uploads
+      mountPath: /data
       sizeGB: 10  # 分配 10GB 存储空间 
